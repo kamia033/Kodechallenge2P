@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kodelås-utfordring</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            text-align: center;
+            max-width: 700px;
+            width: 100%;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+
+        .level-info {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+
+        .challenge-text {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border-left: 5px solid #667eea;
+            text-align: center;
+        }
+
+        .challenge-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .code-lock {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin: 30px 0;
+            flex-wrap: nowrap;
+        }
+
+        .input-group {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            flex-shrink: 0;
+        }
+
+        .input-label {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #333;
+            min-width: 25px;
+        }
+
+        .digit-input {
+            width: 70px;
+            height: 60px;
+            font-size: 1.5em;
+            text-align: center;
+            border: 3px solid #ddd;
+            border-radius: 10px;
+            background: #f8f9fa;
+            transition: all 0.3s ease;
+        }
+
+        .digit-input:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            transform: scale(1.05);
+        }
+
+        .submit-btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.2em;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            margin: 20px 10px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .feedback {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .progress {
+            margin-bottom: 30px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: #e9ecef;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            transition: width 0.5s ease;
+        }
+
+        .video-container {
+            margin-top: 30px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .celebration {
+            animation: bounce 1s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-10px);
+            }
+            60% {
+                transform: translateY(-5px);
+            }
+        }
+
+        .reset-btn {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 15px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+
+        /* Media query for mindre skjermer */
+        @media (max-width: 600px) {
+            .code-lock {
+                gap: 8px;
+            }
+            
+            .input-label {
+                font-size: 1em;
+                min-width: 20px;
+            }
+            
+            .digit-input {
+                width: 50px;
+                height: 50px;
+                font-size: 1.2em;
+            }
+            
+            .input-group {
+                gap: 3px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 id="title">🔒 Kodelås-utfordring</h1>
+        
+        <div class="progress">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+            </div>
+            <p class="level-info" id="levelInfo">Nivå 1 av 4</p>
+        </div>
+
+        <div class="challenge-text" id="challengeText">
+            <img src="Oppgave1.png" alt="Oppgave 1" class="challenge-image" id="challengeImage">
+        </div>
+
+        <div class="code-lock">
+            <div class="input-group">
+                <span class="input-label">x =</span>
+                <input type="number" class="digit-input" id="digit1">
+            </div>
+            <div class="input-group">
+                <span class="input-label">y =</span>
+                <input type="number" class="digit-input" id="digit2">
+            </div>
+            <div class="input-group">
+                <span class="input-label">z =</span>
+                <input type="number" class="digit-input" id="digit3">
+            </div>
+            <div class="input-group">
+                <span class="input-label">q =</span>
+                <input type="number" class="digit-input" id="digit4">
+            </div>
+        </div>
+
+        <button class="submit-btn" onclick="checkCode()">Lås opp!</button>
+        <button class="reset-btn" onclick="resetLevel()">🔄 Nullstill</button>
+
+        <div class="feedback" id="feedback" style="display: none;"></div>
+
+        <div class="video-container hidden" id="videoContainer">
+            <h2 class="celebration">🎉 Gratulerer! Du klarte alle utfordringene! 🎉</h2>
+            <p>Her er din belønning:</p>
+            <iframe width="400" height="225" src="https://www.youtube.com/embed/dQw4w9WgXcQ" 
+                    frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+            <p><em>Som bevis på deres suksess, må dere fortelle læreren deres favorittminne fra sommerferien. Men fortell det veldig diskret! 🏆</em></p>
+        </div>
+    </div>
+
+    <script>
+        let currentLevel = 1;
+        const totalLevels = 5;
+
+        // Definer alle nivåer med koder og bildenavne
+        const levels = {
+            1: {
+                code: ["2", "7", "9", "3"], // x=2, y=7, z=9, q=3 eksempel
+                image: "Oppgave1.png"
+            },
+            2: {
+                code: ["6", "4", "2", "3"], // x=-20, y=25, z=12, q=-4 eksempel
+                image: "Oppgave2.png"
+            },
+            3: {
+                code: ["4", "8", "6", "2"], // x=16, y=-18, z=90, q=45 eksempel
+                image: "Oppgave3.png"
+            },
+            4: {
+                code: ["3", "9", "4", "3"], // x=-7, y=359, z=-24, q=168 eksempel
+                image: "Oppgave4.png"
+            },
+            5: {
+                code: ["6", "2", "6", "3"], // x=5, y=10, z=15, q=20 eksempel
+                image: "Oppgave5.png"
+            }
+        };
+
+        // Automatisk fokus på neste input ved Enter
+        document.querySelectorAll('.digit-input').forEach((input, index) => {
+            input.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    if (index < 3) {
+                        document.getElementById(`digit${index + 2}`).focus();
+                    } else {
+                        checkCode();
+                    }
+                }
+                if (e.key === 'Tab') {
+                    // La standard Tab-navigasjon fungere
+                    return;
+                }
+            });
+        });
+
+        function updateProgress() {
+            const progress = ((currentLevel - 1) / totalLevels) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+            document.getElementById('levelInfo').textContent = `Nivå ${currentLevel} av ${totalLevels}`;
+        }
+
+        function getCurrentCode() {
+            return [
+                document.getElementById('digit1').value.trim(),
+                document.getElementById('digit2').value.trim(),
+                document.getElementById('digit3').value.trim(),
+                document.getElementById('digit4').value.trim()
+            ];
+        }
+
+        function clearInputs() {
+            document.querySelectorAll('.digit-input').forEach(input => input.value = '');
+            document.getElementById('digit1').focus();
+        }
+
+        function showFeedback(message, isSuccess) {
+            const feedback = document.getElementById('feedback');
+            feedback.textContent = message;
+            feedback.className = 'feedback ' + (isSuccess ? 'success' : 'error');
+            feedback.style.display = 'block';
+            
+            setTimeout(() => {
+                feedback.style.display = 'none';
+            }, 3000);
+        }
+
+        function showHint() {
+            // Hint-funksjonalitet fjernet
+        }
+
+        function resetLevel() {
+            clearInputs();
+            document.getElementById('feedback').style.display = 'none';
+        }
+
+        function nextLevel() {
+            currentLevel++;
+            
+            if (currentLevel > totalLevels) {
+                // Vis suksess og video
+                document.getElementById('challengeText').style.display = 'none';
+                document.querySelector('.code-lock').style.display = 'none';
+                document.querySelector('.submit-btn').style.display = 'none';
+                document.querySelector('.reset-btn').style.display = 'none';
+                document.getElementById('videoContainer').classList.remove('hidden');
+                document.getElementById('title').innerHTML = '🏆 Du klarte det! 🏆';
+                document.getElementById('progressFill').style.width = '100%';
+                document.getElementById('levelInfo').textContent = 'Fullført! 🎉';
+                return;
+            }
+
+            // Oppdater til neste nivå
+            const levelData = levels[currentLevel];
+            document.getElementById('challengeImage').src = levelData.image;
+            document.getElementById('challengeImage').alt = `Oppgave ${currentLevel}`;
+            updateProgress();
+            clearInputs();
+            showFeedback(`Riktig! Du er nå på nivå ${currentLevel}!`, true);
+        }
+
+        function checkCode() {
+            const enteredCode = getCurrentCode();
+            
+            // Sjekk om alle felt er fylt ut
+            if (enteredCode.some(value => value === '')) {
+                showFeedback('Vennligst fyll inn alle feltene!', false);
+                return;
+            }
+
+            const correctCode = levels[currentLevel].code;
+            
+            // Sammenlign hvert felt
+            let isCorrect = true;
+            for (let i = 0; i < 4; i++) {
+                if (enteredCode[i] !== correctCode[i]) {
+                    isCorrect = false;
+                    break;
+                }
+            }
+            
+            if (isCorrect) {
+                if (currentLevel === totalLevels) {
+                    showFeedback('🎉 Fantastisk! Du har løst alle utfordringene!', true);
+                    setTimeout(nextLevel, 2000);
+                } else {
+                    setTimeout(nextLevel, 1500);
+                }
+            } else {
+                showFeedback('Feil svar. Prøv igjen! 💪', false);
+                // Litt animasjon for feil kode
+                document.querySelectorAll('.digit-input').forEach(input => {
+                    input.style.borderColor = '#dc3545';
+                    setTimeout(() => {
+                        input.style.borderColor = '#ddd';
+                    }, 1000);
+                });
+            }
+        }
+
+        // Initialiser
+        updateProgress();
+        document.getElementById('digit1').focus();
+    </script>
+</body>
+</html>
